@@ -9,7 +9,7 @@
 <body>
   <div class="container">
     <h2>Submit a Post</h2>
-    <form action="/submit" method="POST">
+    <form id="notifyForm">
       <label for="title">Title:</label>
       <input type="text" id="title" name="title" required />
 
@@ -18,6 +18,31 @@
 
       <button type="submit">Submit</button>
     </form>
+    <div id="response"></div>
   </div>
+
+  <script>
+    document.getElementById("notifyForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const title = document.getElementById("title").value;
+      const body = document.getElementById("body").value;
+
+      try {
+        const response = await fetch("/api/notify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title, body }),
+        });
+
+        const result = await response.json();
+        document.getElementById("response").innerText = JSON.stringify(result, null, 2);
+      } catch (error) {
+        document.getElementById("response").innerText = "Error submitting the form: " + error.message;
+      }
+    });
+  </script>
 </body>
 </html>

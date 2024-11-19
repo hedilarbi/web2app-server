@@ -1,10 +1,13 @@
 const { default: Expo } = require("expo-server-sdk");
 const { default: mongoose } = require("mongoose");
-const sendNotifications = async (title, body, client) => {
+const sendNotifications = async (req, res) => {
+  const { title, body } = req.body;
+  const client = "test";
   try {
     let messages = [];
     let expo = new Expo();
     const users = await mongoose.models.NotifTokens.find({ client });
+
     const usersTokens = users.map((user) => user.token || "");
     for (let pushToken of usersTokens) {
       if (!Expo.isExpoPushToken(pushToken)) {
@@ -25,8 +28,11 @@ const sendNotifications = async (title, body, client) => {
 
       tickets.push(...ticketChunk);
     }
+    console.log(tickets);
+
+    res.json({ message: "Notification sent" });
   } catch (err) {
-    return { error: err.message };
+    res.json({ error: err.message });
   }
 };
 
