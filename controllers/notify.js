@@ -1,4 +1,5 @@
 const { default: Expo } = require("expo-server-sdk");
+
 const { default: mongoose } = require("mongoose");
 const sendNotifications = async (req, res) => {
   const { title, body } = req.body;
@@ -17,8 +18,10 @@ const sendNotifications = async (req, res) => {
       messages.push({
         to: pushToken,
         sound: "default",
+        channel: "default",
         body,
         title,
+        priority: "high",
       });
     }
     let chunks = expo.chunkPushNotifications(messages);
@@ -32,6 +35,7 @@ const sendNotifications = async (req, res) => {
 
     res.json({ message: "Notification sent" });
   } catch (err) {
+    console.error(err.message);
     res.json({ error: err.message });
   }
 };

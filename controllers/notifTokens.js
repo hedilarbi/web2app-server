@@ -6,6 +6,7 @@ const createUser = async (req, res) => {
   try {
     const exist = await NotifTokens.findOne({ token });
     if (exist) {
+      console.error("Token already exists");
       return res.json({ error: "Token already exists" });
     }
     const newUser = new NotifTokens({ client, token });
@@ -14,6 +15,7 @@ const createUser = async (req, res) => {
 
     res.json(user);
   } catch (err) {
+    console.error(err.message);
     res.json({ error: err.message });
   }
 };
