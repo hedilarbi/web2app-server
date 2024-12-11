@@ -24,11 +24,33 @@ app.get("/", (req, res) => {
 app.use("/api/notify", notifyRoutes);
 app.use("/api/notifyTokens", notifyTokensRoutes);
 
-mongoose.connect(
-  process.env.DEV_DB_CONNECTION,
+if (process.env.NODE_ENV === "production") {
+  mongoose.connect(process.env.DEV_DB_CONNECTION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
-  { useNewUrlParser: true }
-);
+  const db = mongoose.connection;
+
+  // Event listeners for connection
+  db.on("connected", () => {
+    console.log("Connected to MongoDB successfully");
+  });
+
+  db.on("error", (err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
+  db.on("disconnected", () => {
+    console.log("Disconnected from MongoDB");
+  });
+} else {
+  mongoose.connect(
+    process.env.DEV_DB_CONNECTION,
+
+    { useNewUrlParser: true }
+  );
+}
 
 httpServer.listen(process.env.PORT, () => {
   console.log("listening on port 5000");
