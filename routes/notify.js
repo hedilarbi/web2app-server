@@ -5,7 +5,7 @@ const {
 } = require("../controllers/notify");
 const router = express.Router();
 
-router.post("/", sendNotifications);
+router.post("/:client", sendNotifications);
 router.post("/one", sendNotificationsForOne);
 
 module.exports = router;
