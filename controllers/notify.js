@@ -3,7 +3,7 @@ const { default: Expo } = require("expo-server-sdk");
 const { default: mongoose } = require("mongoose");
 const sendNotifications = async (req, res) => {
   const { title, body } = req.body;
-  const client = "test";
+  const { client } = req.params;
   try {
     let messages = [];
     let expo = new Expo();
