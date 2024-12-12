@@ -5,8 +5,11 @@ const sendNotifications = async (req, res) => {
   const { title, body } = req.body;
   console.log(req.body);
   const { projectId } = req.params;
-  console.log(projectId);
+
   try {
+    if (!title || !body) {
+      return res.status(400).json({ message: "Title and body are required" });
+    }
     let messages = [];
     let expo = new Expo();
     const users = await mongoose.models.Users.find({ projectId });
