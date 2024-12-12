@@ -5,6 +5,7 @@ const sendNotifications = async (req, res) => {
   const { title, body } = req.body;
   console.log(req.body);
   const { projectId } = req.params;
+  console.log(projectId);
   try {
     let messages = [];
     let expo = new Expo();
