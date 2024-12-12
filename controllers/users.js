@@ -1,19 +1,18 @@
-const NotifTokens = require("../models/NotifTokens");
+const Users = require("../models/Users");
 
 const createUser = async (req, res) => {
-  const { client, token } = req.body;
+  const { projectId, token } = req.body;
 
   try {
-    const exist = await NotifTokens.findOne({ token });
+    const exist = await Users.findOne({ token });
     if (exist) {
-      console.error("Token already exists");
       return res.json({ error: "Token already exists" });
     }
-    const newUser = new NotifTokens({ client, token });
+    const newUser = new Users({ projectId, token });
 
     const user = await newUser.save();
 
-    res.json(user);
+    res.status(201).json(user);
   } catch (err) {
     console.error(err.message);
     res.json({ error: err.message });
@@ -21,10 +20,10 @@ const createUser = async (req, res) => {
 };
 
 const getAllClientUsers = async (req, res) => {
-  const { client } = req.params;
+  const { projectId } = req.params;
 
   try {
-    const users = await mongoose.models.NotifTokens.find({ client });
+    const users = await mongoose.models.Users.find({ projectId });
 
     res.json({ users });
   } catch (err) {

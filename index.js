@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const notifyRoutes = require("./routes/notify");
-const notifyTokensRoutes = require("./routes/notifyTokens");
+const usersRoutes = require("./routes/users");
 const path = require("path");
 require("dotenv/config");
 
@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/notify", notifyRoutes);
-app.use("/api/notifyTokens", notifyTokensRoutes);
+app.use("/api/users", usersRoutes);
 
 if (process.env.NODE_ENV === "production") {
   mongoose.connect(process.env.DEV_DB_CONNECTION, {
