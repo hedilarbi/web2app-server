@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
     const newUser = new Users({ projectId, token });
 
     const user = await newUser.save();
-    console.log(user);
+
     res.status(201).json(user);
   } catch (err) {
     console.error(err.message);
