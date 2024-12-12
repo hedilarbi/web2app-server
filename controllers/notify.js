@@ -1,15 +1,30 @@
 const { default: Expo } = require("expo-server-sdk");
 
 const { default: mongoose } = require("mongoose");
+const fetch = require("node-fetch");
 const sendNotifications = async (req, res) => {
-  const { title, body } = req.body;
+  const { title, body, id_notification } = req.body;
   console.log(req.body);
   const { projectId } = req.params;
 
   try {
-    if (!title || !body) {
-      return res.status(400).json({ message: "Title and body are required" });
+    if (!title || !body || !id_notification) {
+      await fetch(
+        `https://web2app.fr/v1/notification/${id_notification}/update?status=error`,
+        {
+          method: "GET",
+        }
+      );
+      return res
+        .status(400)
+        .json({ message: "Title and body are required", success: false });
     }
+    await fetch(
+      `https://web2app.fr/v1/notification/${id_notification}/update?status=progress`,
+      {
+        method: "GET",
+      }
+    );
     let messages = [];
     let expo = new Expo();
     const users = await mongoose.models.Users.find({ projectId });
@@ -37,10 +52,22 @@ const sendNotifications = async (req, res) => {
       tickets.push(...ticketChunk);
     }
 
-    res.status(200).json({ message: "Notifications envoye" });
+    await fetch(
+      `https://web2app.fr/v1/notification/${id_notification}/update?status=ok`,
+      {
+        method: "GET",
+      }
+    );
+    res.status(200).json({ message: "Notifications envoye", success: true });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ message: err.message });
+    await fetch(
+      `https://web2app.fr/v1/notification/${id_notification}/update?status=error`,
+      {
+        method: "GET",
+      }
+    );
+    res.status(500).json({ message: err.message, success: false });
   }
 };
 
