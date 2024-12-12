@@ -4,7 +4,6 @@ const { default: mongoose } = require("mongoose");
 const fetch = require("node-fetch");
 const sendNotifications = async (req, res) => {
   const { title, body, id_notification } = req.body;
-  console.log(req.body);
   const { projectId } = req.params;
 
   try {
@@ -53,7 +52,7 @@ const sendNotifications = async (req, res) => {
     }
 
     await fetch(
-      `https://web2app.fr/v1/notification/${id_notification}/update?status=ok`,
+      `https://web2app.fr/v1/notification/${id_notification}/update?status=success`,
       {
         method: "GET",
       }
